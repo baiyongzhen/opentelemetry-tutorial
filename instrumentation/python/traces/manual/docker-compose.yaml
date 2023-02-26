@@ -1,0 +1,19 @@
+version: '3.9'
+
+x-default-logging: &logging
+  driver: "json-file"
+  options:
+    max-size: "5m"
+    max-file: "2"
+
+services:
+  app:
+    build:
+      context: app/
+    environment:
+      - OTEL_INSTRUMENTATION_HTTP_CAPTURE_HEADERS_SERVER_REQUEST="Accept-Encoding,User-Agent,Referer"
+      - OTEL_INSTRUMENTATION_HTTP_CAPTURE_HEADERS_SERVER_RESPONSE="Last-Modified,Content-Type"      
+    #command: opentelemetry-instrument flask run --port 8082 --host 0.0.0.0
+    command: flask run --port 8082 --host 0.0.0.0
+    ports:
+      - 8082:8082

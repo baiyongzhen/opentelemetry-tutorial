@@ -1,0 +1,26 @@
+version: '3.9'
+
+x-default-logging: &logging
+  driver: "json-file"
+  options:
+    max-size: "5m"
+    max-file: "2"
+
+services:
+  app:
+    build:
+      context: ./app
+    container_name: app
+    # https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/sdk-environment-variables.md
+    environment:
+      - OTEL_SDK_DISABLED=false
+      - OTEL_EXPORTER_OTLP_SPAN_INSECURE="True"
+      - OTEL_RESOURCE_ATTRIBUTES="deployment.environment=production"
+      - OTEL_SERVICE_NAME=app
+      - OTEL_METRICS_EXPORTER=console
+      - OTEL_TRACES_EXPORTER=console      
+      - OTEL_LOGS_EXPORTER=console    
+    command: opentelemetry-instrument flask run --port 5000 --host 0.0.0.0
+    ports:
+      - "5000:5000"
+    logging: *logging

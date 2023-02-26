@@ -1,0 +1,6 @@
+flask
+prometheus_client
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-exporter-prometheus
+opentelemetry-instrumentation-flask

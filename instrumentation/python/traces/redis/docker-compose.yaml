@@ -1,0 +1,28 @@
+version: '3.9'
+
+x-default-logging: &logging
+  driver: "json-file"
+  options:
+    max-size: "5m"
+    max-file: "2"
+
+services:
+  app:
+    build:
+      context: app/
+    environment:
+      - OTEL_PYTHON_INSTRUMENTATION_SANITIZE_REDIS="true"
+    command: opentelemetry-instrument flask run --port 8082 --host 0.0.0.0
+    ports:
+      - 8082:8082
+
+  redis: 
+    image: redislabs/redismod
+    container_name: redis
+    ports:
+      - '6379:6379' 
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - '8001:8001'

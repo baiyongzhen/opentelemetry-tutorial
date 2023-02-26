@@ -1,0 +1,28 @@
+version: '3.9'
+
+x-default-logging: &logging
+  driver: "json-file"
+  options:
+    max-size: "5m"
+    max-file: "2"
+
+services:
+  app:
+    build:
+      context: app/
+    depends_on:
+      - collector
+#    environment:
+#      - OTEL_PYTHON_LOG_CORRELATION="true"
+    #command: opentelemetry-instrument flask run --port 8082 --host 0.0.0.0
+    command: flask run --port 8082 --host 0.0.0.0
+    ports:
+      - 8082:8082
+
+  collector:
+    image: otel/opentelemetry-collector
+    ports:
+      - 9978:9978
+    command: "--config /otel-config.yaml"
+    volumes:
+      - ./otel-collector-config.yaml:/otel-config.yaml:ro
