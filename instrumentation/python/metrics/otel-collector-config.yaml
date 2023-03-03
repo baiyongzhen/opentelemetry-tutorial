@@ -1,0 +1,39 @@
+# otel-collector-config.yaml
+#receivers:
+#otlp:
+#    protocols:
+#    grpc:
+#
+#exporters:
+#logging:
+
+#processors:
+#batch:
+#
+#service:
+#    pipelines:
+#        logs:
+#            receivers: [otlp]
+#            exporters: [logging]
+
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:9978
+
+processors:
+  batch:
+
+exporters:
+  # Data sources: traces, metrics, logs
+  logging:
+    loglevel: debug
+
+service:
+  pipelines:
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging]    

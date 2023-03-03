@@ -21,12 +21,10 @@ provider.add_span_processor(simple_processor)
 trace.set_tracer_provider(provider)
 KafkaInstrumentor().instrument()
 
-
 producer = KafkaProducer(bootstrap_servers='kafka:9092')
 
 @app.route("/producer")
 def server_request():
-    print(request.args.get("param"))
     for _ in range(1):
         producer.send('foobar', b'some_message_bytes')
         producer.flush()    

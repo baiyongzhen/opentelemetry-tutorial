@@ -17,7 +17,16 @@ services:
       - "8000:8000"
       - "5000:5000"
     logging: *logging
-    
+
+
+  collector:
+    image: otel/opentelemetry-collector
+    ports:
+      - 9978:9978
+    command: "--config /otel-config.yaml"
+    volumes:
+      - ./otel-collector-config.yaml:/otel-config.yaml:ro
+
   # Prometheus
   prometheus:
     image: quay.io/prometheus/prometheus:v2.34.0
